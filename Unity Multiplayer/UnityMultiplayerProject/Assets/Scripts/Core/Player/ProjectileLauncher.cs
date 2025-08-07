@@ -7,7 +7,6 @@ using UnityEngine;
 public class ProjectileLauncher : NetworkBehaviour
 {
     [Header("References")]
-   
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private InputReader inputReader;
     [SerializeField] private GameObject serverProjectilePrefab;
@@ -93,6 +92,11 @@ public class ProjectileLauncher : NetworkBehaviour
 
         Physics2D.IgnoreCollision(playerCollider,projectileInstance.GetComponent<Collider2D>());
 
+
+        if (projectileInstance.TryGetComponent<DealDamageOnContact>(out DealDamageOnContact damageOnContact))
+        {
+            damageOnContact.SetOwner(OwnerClientId);
+        }
         if (projectileInstance.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
         {
             rb.velocity = rb.transform.up * projectileSpeed;
