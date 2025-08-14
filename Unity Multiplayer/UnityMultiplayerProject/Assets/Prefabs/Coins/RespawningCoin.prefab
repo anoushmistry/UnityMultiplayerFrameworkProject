@@ -90,4 +90,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce17ea3bb5c62864ab0028c0b25d5dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 142198853919917850}
+  coinSpriteRenderer: {fileID: 142198853919917850}

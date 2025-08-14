@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class Coin : NetworkBehaviour
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer coinSpriteRenderer;
 
     protected int coinValue = 10;
     protected bool alreadyCollected; // This prevents both the tanks collecting the same coin and the same time
@@ -20,6 +20,6 @@ public abstract class Coin : NetworkBehaviour
 
     protected void Show(bool show)
     {
-        spriteRenderer.enabled = show;
+        coinSpriteRenderer.enabled = show;
     }
 }

@@ -26,11 +26,15 @@ public class ApplicationController : MonoBehaviour
                    Instantiate(
                        clientPrefab); // Async means to wait until a specific task is completed before continuing on to other tasks
           
-           await clientSingleton.CreateClient();
+           bool authenticated = await clientSingleton.CreateClient();
 
            HostSingleton hostSingleton = Instantiate(hostPrefab);
            hostSingleton.CreateHost();
 
+           if (authenticated)
+           {
+               clientSingleton.clientGameManager.GoToMenu();
+           }
            // Go to the Main Menu
         }
     }
