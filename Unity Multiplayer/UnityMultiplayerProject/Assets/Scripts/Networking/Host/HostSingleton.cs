@@ -6,7 +6,7 @@ using UnityEngine;
 public class HostSingleton : MonoBehaviour
 {
     private static HostSingleton instance;
-    [SerializeField] private HostGameManager hostGameManager;
+    public HostGameManager hostGameManager {get; private set;}
 
     public static HostSingleton Instance
     {
