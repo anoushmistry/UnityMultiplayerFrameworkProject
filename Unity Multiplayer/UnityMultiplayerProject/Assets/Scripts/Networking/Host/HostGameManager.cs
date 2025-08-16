@@ -44,7 +44,8 @@ public class HostGameManager : MonoBehaviour
         }
 
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        RelayServerData relayServerData = new RelayServerData(allocation, "udp");
+        RelayServerData relayServerData = new RelayServerData(allocation, "dtls"); // dtls is a more secure version of UDP
+                                                                                                // switch to UDP if causing issues
         transport.SetRelayServerData(relayServerData);
         
         NetworkManager.Singleton.StartHost();
