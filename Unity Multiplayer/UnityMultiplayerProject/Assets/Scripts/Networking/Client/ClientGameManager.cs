@@ -18,7 +18,7 @@ public class ClientGameManager
     
     private const string GameSceneName = "Game";
 
-    public async Task<bool> InitializeAsync()
+    public async Task<bool> InitializeAsync()       // Used for authenticationg and initializing a client
     {
         await UnityServices.InitializeAsync();
 
@@ -37,7 +37,7 @@ public class ClientGameManager
         SceneManager.LoadScene(MenuSceneName);
     }
 
-    public async Task StartClientAsync(string joinCode)
+    public async Task StartClientAsync(string joinCode) // Used for joining a given connection with a join code
     {
         try
         {

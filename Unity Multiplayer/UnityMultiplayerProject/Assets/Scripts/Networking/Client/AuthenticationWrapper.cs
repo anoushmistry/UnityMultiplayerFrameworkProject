@@ -10,7 +10,7 @@ public static class AuthenticationWrapper
 {
     public static AuthState AuthState { get; private set; } = AuthState.NotAuthenticated;
 
-    public static async Task<AuthState> DoAuth(int maxTries = 5)
+    public static async Task<AuthState> DoAuth(int maxTries = 5) // Used for checking authentication status
     {
         if (AuthState == AuthState.Authenticated)
         {
@@ -28,7 +28,7 @@ public static class AuthenticationWrapper
         return AuthState;
     }
 
-    private static async Task<AuthState> Authenticating()
+    private static async Task<AuthState> Authenticating()  // A small delay to avoid multiple attempts while one is already going on
     {
         while (AuthState == AuthState.Authenticating || AuthState == AuthState.NotAuthenticated)
         {
