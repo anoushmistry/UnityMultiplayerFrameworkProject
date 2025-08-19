@@ -14,7 +14,7 @@ using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class HostGameManager : MonoBehaviour
+public class HostGameManager : IDisposable
 {
     private Allocation allocation;
     private NetworkServer networkServer;
@@ -111,4 +111,22 @@ public class HostGameManager : MonoBehaviour
     // {
     //     lobbyOptions.IsPrivate = isPrivate;
     // }
+    public async void Dispose()
+    {
+        HostSingleton.Instance.StopCoroutine(nameof(HeartbeatLobby));
+
+        if (!string.IsNullOrEmpty(lobbyId))
+        {
+            try
+            {
+                await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log(e);
+            }
+            lobbyId = string.Empty;
+        }
+        networkServer?.Dispose();
+    }
 }

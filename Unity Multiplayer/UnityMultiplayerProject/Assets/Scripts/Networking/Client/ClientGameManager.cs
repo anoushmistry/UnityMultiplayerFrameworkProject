@@ -13,7 +13,7 @@ using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ClientGameManager
+public class ClientGameManager : IDisposable
 {
     private const string MenuSceneName = "MainMenu";
     private JoinAllocation allocation;
@@ -74,5 +74,10 @@ public class ClientGameManager
         NetworkManager.Singleton.StartClient();
         
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName,LoadSceneMode.Single);
+    }
+
+    public void Dispose()
+    {
+        networkClient?.Dispose();
     }
 }
