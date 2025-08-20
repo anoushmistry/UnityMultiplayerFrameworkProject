@@ -8,7 +8,7 @@ public class NetworkServer : IDisposable
 {
     private NetworkManager networkManager;
     private Dictionary<ulong, string> clientIdToAuth = new Dictionary<ulong, string>();
-    private Dictionary<string, UserData> authIdToUserData  = new Dictionary<string, UserData>();
+    private Dictionary<string, UserData> authIdToUserData = new Dictionary<string, UserData>();
 
     public NetworkServer(NetworkManager networkManager)
     {
@@ -47,6 +47,20 @@ public class NetworkServer : IDisposable
             clientIdToAuth.Remove(clientId);
             authIdToUserData.Remove(authId);
         }
+    }
+
+    public UserData GetUserDataByClientId(ulong clientId)
+    {
+        if (clientIdToAuth.TryGetValue(clientId, out string authId))
+        {
+            if (authIdToUserData.TryGetValue(authId, out UserData userData))
+            {
+                return userData;
+            }
+            return null;
+        }
+
+        return null;
     }
 
     public void Dispose()
