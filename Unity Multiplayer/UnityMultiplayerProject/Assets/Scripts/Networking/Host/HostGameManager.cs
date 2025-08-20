@@ -113,7 +113,7 @@ public class HostGameManager : IDisposable
     // }
     public async void Dispose()
     {
-        HostSingleton.Instance.StopCoroutine(nameof(HeartbeatLobby));
+        HostSingleton.Instance?.StopCoroutine(nameof(HeartbeatLobby));
 
         if (!string.IsNullOrEmpty(lobbyId))
         {
