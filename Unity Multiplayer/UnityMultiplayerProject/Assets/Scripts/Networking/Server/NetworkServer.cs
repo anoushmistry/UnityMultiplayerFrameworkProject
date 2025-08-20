@@ -31,7 +31,11 @@ public class NetworkServer : IDisposable
         Debug.Log(userData.userName);
 
         response.Approved = true;
-
+        response.Position =
+            SpawnPoint
+                .GetRandomSpawnPoint(); // Spawning the Players at a random spawn point
+                                        // (except the host, as this happens at the same time or a bit after the host spawns)
+        response.Rotation = Quaternion.identity;
         response.CreatePlayerObject = true;
     }
 
