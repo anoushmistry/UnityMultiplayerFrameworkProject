@@ -2266,6 +2266,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1353679042}
+  - component: {fileID: 1353679044}
   - component: {fileID: 1353679043}
   m_Layer: 0
   m_Name: GameHUD
@@ -2302,6 +2303,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4651e5a8338ae6040b307cc83f85f623, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaderboardEntityPrefab: {fileID: -8762309944043698759, guid: 679e7b0e7a5823c48858be72ea0e112f, type: 3}
+  leaderboardEntityParent: {fileID: 1676995285}
+--- !u!114 &1353679044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353679041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1907372064
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &1470933499
 PrefabInstance:
   m_ObjectHideFlags: 0

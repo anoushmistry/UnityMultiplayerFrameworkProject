@@ -1,18 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Leaderboard : MonoBehaviour
+public class Leaderboard : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private LeaderboardEntityDisplay leaderboardEntityPrefab;
+    [SerializeField] private Transform leaderboardEntityParent;
+    
+    private NetworkList<LeaderboardEntityState> leaderboardEntities;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        leaderboardEntities = new NetworkList<LeaderboardEntityState>();
     }
 }
