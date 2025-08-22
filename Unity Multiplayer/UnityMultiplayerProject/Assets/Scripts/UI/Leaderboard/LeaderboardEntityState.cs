@@ -7,9 +7,9 @@ using UnityEngine;
 
 public struct LeaderboardEntityState : INetworkSerializable, IEquatable<LeaderboardEntityState>
 {
-    private ulong clientId;
-    private FixedString32Bytes playerName;
-    private int coins;
+    public ulong clientId;
+    public FixedString32Bytes playerName;
+    public int coins;
     
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
