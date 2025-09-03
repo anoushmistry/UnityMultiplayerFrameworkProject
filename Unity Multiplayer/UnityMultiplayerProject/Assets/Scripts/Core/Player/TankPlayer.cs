@@ -13,6 +13,8 @@ public class TankPlayer : NetworkBehaviour
 
     [Header("Settings")] [SerializeField] private int cameraPriority = 15;
     [field: SerializeField] public Health Health { get; private set; }
+    
+    [field: SerializeField] public CoinWallet CoinWallet { get; private set; }
 
     public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
     public static event Action<TankPlayer> OnPlayerSpawned;
