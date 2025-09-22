@@ -148,3 +148,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayText: {fileID: 1814295899268824464}
+  personalEntityColor: {r: 0, g: 1, b: 0.6882107, a: 1}

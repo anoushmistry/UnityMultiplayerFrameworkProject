@@ -13,6 +13,9 @@ public class Leaderboard : NetworkBehaviour
     private NetworkList<LeaderboardEntityState> leaderboardEntities;
     private List<LeaderboardEntityDisplay> entityDisplays = new List<LeaderboardEntityDisplay>();
 
+    [SerializeField]
+    private int entitesToDisplay = 7; // Based off the Leaderboard UI (which can hold 7 visible entities at once)
+
     private void Awake()
     {
         leaderboardEntities = new NetworkList<LeaderboardEntityState>();
@@ -85,6 +88,26 @@ public class Leaderboard : NetworkBehaviour
 
                 break;
         }
+        entityDisplays.Sort((x, y) => y.Coins.CompareTo(x.Coins));
+        for (int i = 0; i < entityDisplays.Count; i++)
+        {
+            entityDisplays[i].transform.SetSiblingIndex(i);
+            entityDisplays[i].UpdateDisplayText();
+            bool shouldShow = i <= entitesToDisplay - 1;
+            entityDisplays[i].gameObject.SetActive(shouldShow);
+           
+        }
+        LeaderboardEntityDisplay myEntityDisplay =
+            entityDisplays.FirstOrDefault(x => x.ClientId == NetworkManager.Singleton.LocalClientId);
+
+        if (myEntityDisplay != null)
+        {
+            if (myEntityDisplay.transform.GetSiblingIndex() >= entitesToDisplay)
+            {
+                leaderboardEntityParent.GetChild(entitesToDisplay - 1).gameObject.SetActive(false);
+                myEntityDisplay.gameObject.SetActive(true);
+            }
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -129,6 +152,7 @@ public class Leaderboard : NetworkBehaviour
                 playerName = leaderboardEntities[i].playerName,
                 coins = newValue
             };
+            Debug.Log("Updated player coins");
             return;
         }
     }
@@ -147,7 +171,7 @@ public class Leaderboard : NetworkBehaviour
             leaderboardEntities.Remove(entity);
             break;
         }
-        
+
         player.CoinWallet.TotalCoins.OnValueChanged -=
             (oldCoins, newCoins) => HandlePlayerCoins(player.OwnerClientId, newCoins);
     }
