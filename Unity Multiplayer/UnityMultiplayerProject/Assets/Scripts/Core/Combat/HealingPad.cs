@@ -19,6 +19,79 @@ public class HealingPad : NetworkBehaviour
     private List<TankPlayer>
         playersInZone = new List<TankPlayer>(); // List that stores the players currently in the healing pad
 
+    private NetworkVariable<int> healPower = new NetworkVariable<int>();
+
+    private float remainingCooldown;
+    private float tickTimer;
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsClient)
+        {
+            healPower.OnValueChanged += OnHealPowerChanged;
+            OnHealPowerChanged(0, healPower.Value);
+        }
+
+        if (IsServer)
+        {
+            healPower.Value =  maxHealPower;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsClient)
+        {
+            healPower.OnValueChanged -= OnHealPowerChanged;
+        }
+    }
+
+    private void Update()
+    {
+        if(!IsServer) {return;}
+
+        if (remainingCooldown > 0f)
+        {
+            remainingCooldown -= Time.deltaTime;
+
+            if (remainingCooldown <= 0)
+            {
+                healPower.Value = maxHealPower;
+            }
+            else
+            {
+                return;
+            }
+        }
+        
+        tickTimer += Time.deltaTime;
+        if (tickTimer >= 1 / healFrequency)
+        {
+            foreach (TankPlayer player in playersInZone)
+            {
+                if (healPower.Value == 0)
+                {
+                    break;
+                }
+                
+                if(player.Health.CurrentHealth.Value == player.Health.MaxHealth) {continue;}
+                
+                if(player.CoinWallet.TotalCoins.Value < coinsPerTick) {continue;}
+                
+                player.CoinWallet.SpendCoins(coinsPerTick);
+                player.Health.RestoreHealth(healthPerTick);
+
+                healPower.Value -= 1;
+
+                if (healPower.Value == 0)
+                {
+                    remainingCooldown = healCooldown;
+                }
+            }
+            tickTimer = tickTimer % (1/healFrequency);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!IsServer)
@@ -26,11 +99,10 @@ public class HealingPad : NetworkBehaviour
             return;
         }
 
-        if
-            (!other.attachedRigidbody
-                 .TryGetComponent<
-                     TankPlayer>(
-                     out TankPlayer player)) // Getting attachedRigidbody's Collider because the Collider is not present on the root
+        if (!other.attachedRigidbody
+                .TryGetComponent<
+                    TankPlayer>(
+                    out TankPlayer player)) // Getting attachedRigidbody's Collider because the Collider is not present on the root
         {
             return;
         }
@@ -56,4 +128,10 @@ public class HealingPad : NetworkBehaviour
         
         Debug.Log($"Player {player.PlayerName.Value} has left healing Pad.");
     }
+
+    private void OnHealPowerChanged(int oldHealPower, int newHealPower)
+    {
+        healPadCapacityBar.fillAmount = (float)newHealPower / maxHealPower;
+    }
+    
 }
