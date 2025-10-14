@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 public class NetworkServer : IDisposable
@@ -20,6 +21,12 @@ public class NetworkServer : IDisposable
         networkManager.OnServerStarted += OnNetworkReady;
     }
 
+    public bool OpenConenction(string serverIP, int serverPort)
+    {
+        UnityTransport transport = networkManager.gameObject.GetComponent<UnityTransport>();
+        transport.SetConnectionData(serverIP, (ushort)serverPort);
+        return networkManager.StartServer();
+    }
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
         NetworkManager.ConnectionApprovalResponse response)

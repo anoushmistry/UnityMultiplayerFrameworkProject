@@ -53,7 +53,7 @@ public class HostGameManager : IDisposable
         RelayServerData
             relayServerData =
                 new RelayServerData(allocation,
-                    "dtls"); // dtls is a more secure version of UDP  switch to UDP if causing issues
+                    "dtls"); // dtls is a more secure version of UDP. Switch to UDP if causing issues
         transport.SetRelayServerData(relayServerData);
 
         try
