@@ -12,7 +12,7 @@ Deterministic multiplayer support.
 
 High-performance networking model.
 
-Client-Server architecture.
+Client-Server and Dedicated Server architecture.
 
 Unity Gaming Services Integration
 
