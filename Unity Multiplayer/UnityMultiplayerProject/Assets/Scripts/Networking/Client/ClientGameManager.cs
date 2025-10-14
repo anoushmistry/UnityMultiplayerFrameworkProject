@@ -76,8 +76,14 @@ public class ClientGameManager : IDisposable
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName,LoadSceneMode.Single);
     }
 
+    public void Disconnect()
+    {
+        networkClient.Disconnect();
+    }
     public void Dispose()
     {
         networkClient?.Dispose();
     }
+
+    
 }

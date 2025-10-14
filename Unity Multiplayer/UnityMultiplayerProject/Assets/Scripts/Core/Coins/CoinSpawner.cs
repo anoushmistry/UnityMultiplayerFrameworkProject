@@ -62,4 +62,24 @@ public class CoinSpawner : NetworkBehaviour
             
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+
+
+        Vector3 center = new Vector3(
+            (xSpawnRange.x + xSpawnRange.y) / 2f,
+            (ySpawnRange.x + ySpawnRange.y) / 2f,
+            0f
+        );
+
+        Vector3 size = new Vector3(
+            Mathf.Abs(xSpawnRange.y - xSpawnRange.x),
+            Mathf.Abs(ySpawnRange.y - ySpawnRange.x),
+            0f
+        );
+        
+        Gizmos.DrawWireCube(center, size);
+    }
 }

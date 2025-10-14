@@ -23,7 +23,7 @@ public class HostGameManager : IDisposable
     private const int maxConnections = 20;
 
     private const string GameSceneName = "Game";
-    
+
     //private CreateLobbyOptions lobbyOptions = new CreateLobbyOptions();
 
     public async Task StartHostAsync()
@@ -51,7 +51,9 @@ public class HostGameManager : IDisposable
 
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         RelayServerData
-            relayServerData = new RelayServerData(allocation, "dtls"); // dtls is a more secure version of UDP  switch to UDP if causing issues
+            relayServerData =
+                new RelayServerData(allocation,
+                    "dtls"); // dtls is a more secure version of UDP  switch to UDP if causing issues
         transport.SetRelayServerData(relayServerData);
 
         try
@@ -67,11 +69,12 @@ public class HostGameManager : IDisposable
                     )
                 }
             };
-            string playerName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "Unknown"); 
-           Lobby lobby = await Lobbies.Instance.CreateLobbyAsync($"{playerName}'s Lobby", maxConnections,lobbyOptions);
-           lobbyId = lobby.Id;
+            string playerName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "Unknown");
+            Lobby lobby =
+                await Lobbies.Instance.CreateLobbyAsync($"{playerName}'s Lobby", maxConnections, lobbyOptions);
+            lobbyId = lobby.Id;
 
-           HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15));
+            HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15));
         }
         catch (LobbyServiceException lobbyServiceException)
         {
@@ -80,19 +83,21 @@ public class HostGameManager : IDisposable
         }
 
         NetworkServer = new NetworkServer(NetworkManager.Singleton);
-        
+
         UserData userData = new UserData
         {
             userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "MissingName"),
             userAuthId = AuthenticationService.Instance.PlayerId
         };
-        
+
         string payload = JsonUtility.ToJson(userData);
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
-        
+
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
-        
+
         NetworkManager.Singleton.StartHost();
+
+        NetworkServer.OnClientLeft += HandleClientLeft;
 
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
     }
@@ -105,13 +110,18 @@ public class HostGameManager : IDisposable
             Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
             yield return delay;
         }
-        
     }
+
     // public void ToggleLobbyPrivacy(bool isPrivate)
     // {
     //     lobbyOptions.IsPrivate = isPrivate;
     // }
-    public async void Dispose()
+    public void Dispose()
+    {
+        Shutdown();
+    }
+
+    public async void Shutdown()
     {
         HostSingleton.Instance?.StopCoroutine(nameof(HeartbeatLobby));
 
@@ -125,8 +135,25 @@ public class HostGameManager : IDisposable
             {
                 Debug.Log(e);
             }
+
             lobbyId = string.Empty;
         }
+
+        NetworkServer.OnClientLeft -= HandleClientLeft;
+
         NetworkServer?.Dispose();
+    }
+
+    private async void HandleClientLeft(string authId)
+    {
+        try
+        {
+            await LobbyService.Instance.RemovePlayerAsync(lobbyId, authId);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+            throw;
+        }
     }
 }

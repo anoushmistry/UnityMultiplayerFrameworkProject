@@ -24,7 +24,11 @@ public class NetworkClient : IDisposable
         {
             return;
         } // clientId 0 is the host here, This makes sure that it is us shutting down
-
+        
+        Disconnect();
+    }
+    public void Disconnect()
+    {
         if (SceneManager.GetActiveScene().name != MenuSceneName)
         {
             SceneManager.LoadScene(MenuSceneName);
@@ -35,7 +39,6 @@ public class NetworkClient : IDisposable
             networkManager.Shutdown();
         }
     }
-
     public void Dispose()
     {
         if (networkManager != null)
@@ -43,4 +46,6 @@ public class NetworkClient : IDisposable
             networkManager.OnClientDisconnectCallback -= OnClientDisconnect;
         }
     }
+
+    
 }
