@@ -540,7 +540,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 488903412}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1316193251}
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+        m_MethodName: FindMatch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &488903412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2175,7 +2187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 937cf3cc5f6d46e48838c69ebf728119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FindMatchButton: {fileID: 0}
+  FindMatchButton: {fileID: 488903411}
   findMatchText: {fileID: 2111574389}
   queueTimeText: {fileID: 1072383055}
   queueStatusText: {fileID: 841575919}

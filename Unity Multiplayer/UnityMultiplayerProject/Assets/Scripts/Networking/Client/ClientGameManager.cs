@@ -52,7 +52,9 @@ public class ClientGameManager : IDisposable
         SceneManager.LoadScene(MenuSceneName);
     }
 
-    public async Task StartClientAsync(string joinCode) // Used for joining a given connection with a join code
+    public async Task
+        StartClientAsync(
+            string joinCode) // Used for joining a given connection with a join code (For Relay and Lobby (not dedicated server)
     {
         try
         {
@@ -68,11 +70,20 @@ public class ClientGameManager : IDisposable
 
         RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
         transport.SetRelayServerData(relayServerData);
+        
+        ConnectClient();
+    }
 
-
+    private void StartClient(string ip, int port) // Used for dedicated server
+    {
+        UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+        transport.SetConnectionData(ip, (ushort)port);
+        ConnectClient();    
+    }
+    private void ConnectClient()
+    {
         string payload = JsonUtility.ToJson(userData);
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
-
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
 
         NetworkManager.Singleton.StartClient();
@@ -80,6 +91,14 @@ public class ClientGameManager : IDisposable
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
     }
 
+    public async void MatchmakeAsync(Action<MatchmakerPollingResult> OnMatchmake)
+    {
+        if(matchplayMatchmaker.IsMatchmaking) {return;}
+
+        MatchmakerPollingResult matchmakerPollingResult = await GetMatchAsync();
+        OnMatchmake?.Invoke(matchmakerPollingResult);
+
+    }
     private async Task<MatchmakerPollingResult> GetMatchAsync()
     {
         MatchmakingResult matchmakingResult = await matchplayMatchmaker.Matchmake(userData);
@@ -87,8 +106,13 @@ public class ClientGameManager : IDisposable
         if (matchmakingResult.result == MatchmakerPollingResult.Success)
         {
             //Join server
+            StartClient(matchmakingResult.ip, matchmakingResult.port);
         }
         return matchmakingResult.result;
+    }
+    public async Task CancelMatchmaking()
+    {
+        await matchplayMatchmaker.CancelMatchmaking();
     }
     public void Disconnect()
     {
@@ -99,4 +123,6 @@ public class ClientGameManager : IDisposable
     {
         networkClient?.Dispose();
     }
+
+    
 }
