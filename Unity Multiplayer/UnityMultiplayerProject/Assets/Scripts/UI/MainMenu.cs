@@ -12,6 +12,7 @@ public class MainMenu : MonoBehaviour
    [SerializeField] private TMP_Text queueStatusText;
    [SerializeField] private TMP_InputField joinCodeField;
 
+   private bool isMatchmaking, isCancelling;
    private void Start()
    {
       if (ClientSingleton.Instance == null)
@@ -21,6 +22,27 @@ public class MainMenu : MonoBehaviour
       Cursor.SetCursor(null,Vector2.zero, CursorMode.Auto);
       queueStatusText.text = string.Empty;
       queueTimeText.text = string.Empty;
+   }
+
+   public async void FindMatch()
+   {
+      if(isCancelling) {return;}
+      
+      if (isMatchmaking)
+      {
+         queueStatusText.text = "Cancelling...";
+         isCancelling = true;
+         //Cancel Queue
+         isCancelling = false;
+         isMatchmaking = false;
+         queueStatusText.text = string.Empty;
+         findMatchText.text = "Find Match";
+         return;
+      }
+      //Start Queue
+      findMatchText.text = "Cancel";
+      queueStatusText.text = "Searching...";
+      isMatchmaking = true;
    }
    public async void StartHost()
    {
