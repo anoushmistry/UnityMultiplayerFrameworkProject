@@ -18,12 +18,15 @@ public class ServerGameManager : IDisposable
 {
     private string serverIP;
     private int serverPort, queryPort;
-    private NetworkServer networkServer;
+    
 
     private MultiplayAllocationService multiplayAllocationService;
     private const string GameSceneName = "Game";
     
     private MatchplayBackfiller matchplayBackfiller;
+    
+    
+    public NetworkServer networkServer { get; private set;}
 
     public ServerGameManager(string serverIP, int serverPort, int queryPort, NetworkManager manager)
     {
