@@ -9,9 +9,10 @@ public class LobbiesList : MonoBehaviour
 {
     [SerializeField] private Transform lobbyItemParent;
     [SerializeField] private LobbyItem lobbyItemPrefab;
-
-    private bool isJoining;
+    
     private bool isRefreshing;
+
+    [SerializeField] private MainMenu mainMenu;
 
     private void OnEnable()
     {
@@ -46,18 +47,18 @@ public class LobbiesList : MonoBehaviour
                 )
             };
 
-           QueryResponse lobbies = await Lobbies.Instance.QueryLobbiesAsync(options);
+            QueryResponse lobbies = await Lobbies.Instance.QueryLobbiesAsync(options);
 
-           foreach (Transform child in lobbyItemParent)
-           {
-               Destroy(child.gameObject);
-           }
+            foreach (Transform child in lobbyItemParent)
+            {
+                Destroy(child.gameObject);
+            }
 
-           foreach (Lobby lobby in lobbies.Results )
-           {
-              LobbyItem lobbyItem = Instantiate(lobbyItemPrefab, lobbyItemParent);
-              lobbyItem.Initialize(this,lobby);
-           }
+            foreach (Lobby lobby in lobbies.Results)
+            {
+                LobbyItem lobbyItem = Instantiate(lobbyItemPrefab, lobbyItemParent);
+                lobbyItem.Initialize(this, lobby);
+            }
         }
         catch (LobbyServiceException e)
         {
@@ -68,26 +69,8 @@ public class LobbiesList : MonoBehaviour
         isRefreshing = false;
     }
 
-    public async void JoinAsync(Lobby lobby)
+    public void JoinAsync(Lobby lobby) // Calls the Main Menu JoinAsync Method
     {
-        if (isJoining)
-        {
-            return;
-        }
-
-        isJoining = true;
-        try
-        {
-            Lobby joiningLobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobby.Id);
-            string joinCode = joiningLobby.Data["JoinCode"].Value;
-
-            await ClientSingleton.Instance.clientGameManager.StartClientAsync(joinCode);
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.Log(e);
-        }
-
-        isJoining = false;
+        mainMenu.JoinAsync(lobby);
     }
 }

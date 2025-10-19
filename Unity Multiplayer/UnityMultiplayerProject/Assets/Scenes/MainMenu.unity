@@ -1797,6 +1797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lobbyItemParent: {fileID: 1951840360}
   lobbyItemPrefab: {fileID: 7017744531970077963, guid: a9c5026c7c440a748b70e03bb19f3260, type: 3}
+  mainMenu: {fileID: 1316193251}
 --- !u!1 &1154318095
 GameObject:
   m_ObjectHideFlags: 0
@@ -2189,7 +2190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FindMatchButton: {fileID: 488903411}
   findMatchText: {fileID: 2111574389}
-  queueTimeText: {fileID: 1072383055}
+  queueTimerText: {fileID: 1072383055}
   queueStatusText: {fileID: 841575919}
   joinCodeField: {fileID: 2067772840}
 --- !u!1 &1389491678
