@@ -18,23 +18,25 @@ public class ServerGameManager : IDisposable
 {
     private string serverIP;
     private int serverPort, queryPort;
-    
+
 
     private MultiplayAllocationService multiplayAllocationService;
-    private const string GameSceneName = "Game";
-    
-    private MatchplayBackfiller matchplayBackfiller;
-    
-    
-    public NetworkServer networkServer { get; private set;}
 
-    public ServerGameManager(string serverIP, int serverPort, int queryPort, NetworkManager manager)
+    private MatchplayBackfiller matchplayBackfiller;
+    private NetworkObject playerPrefab;
+
+
+    public NetworkServer networkServer { get; private set; }
+
+    public ServerGameManager(string serverIP, int serverPort, int queryPort,
+        NetworkManager manager, NetworkObject playerPrefab)
     {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.queryPort = queryPort;
-        networkServer = new NetworkServer(manager);
+        networkServer = new NetworkServer(manager, playerPrefab);
         multiplayAllocationService = new MultiplayAllocationService();
+        this.playerPrefab = playerPrefab;
     }
 
     public async Task StartGameServerAsync()
@@ -67,9 +69,6 @@ public class ServerGameManager : IDisposable
             Debug.LogError($"Network server could not be started as expected");
             return;
         }
-
-        ;
-        NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
     }
 
     private async Task<MatchmakingResults> GetMatchPayload()
@@ -111,19 +110,19 @@ public class ServerGameManager : IDisposable
 
     private void UserLeft(UserData user)
     {
-       int playerCount = matchplayBackfiller.RemovePlayerFromMatch(user.userAuthId);
-       multiplayAllocationService.RemovePlayer();
+        int playerCount = matchplayBackfiller.RemovePlayerFromMatch(user.userAuthId);
+        multiplayAllocationService.RemovePlayer();
 
-       if (playerCount <= 0)
-       {
-           CloseServer();
-           return;
-       }
+        if (playerCount <= 0)
+        {
+            CloseServer();
+            return;
+        }
 
-       if (matchplayBackfiller.NeedsPlayers() && matchplayBackfiller.IsBackfilling)
-       {
-           _ = matchplayBackfiller.BeginBackfilling();
-       }
+        if (matchplayBackfiller.NeedsPlayers() && matchplayBackfiller.IsBackfilling)
+        {
+            _ = matchplayBackfiller.BeginBackfilling();
+        }
     }
 
     private async void CloseServer()
@@ -137,7 +136,7 @@ public class ServerGameManager : IDisposable
     {
         networkServer.OnUserJoined -= UserJoined;
         networkServer.OnUserLeft -= UserLeft;
-        
+
         matchplayBackfiller?.Dispose();
         multiplayAllocationService?.Dispose();
         networkServer?.Dispose();

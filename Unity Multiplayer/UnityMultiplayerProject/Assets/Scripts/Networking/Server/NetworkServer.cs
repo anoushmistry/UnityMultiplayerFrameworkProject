@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -10,14 +11,16 @@ public class NetworkServer : IDisposable
     private NetworkManager networkManager;
     private Dictionary<ulong, string> clientIdToAuth = new Dictionary<ulong, string>();
     private Dictionary<string, UserData> authIdToUserData = new Dictionary<string, UserData>();
+    private NetworkObject playerPrefab;
 
     public Action<string> OnClientLeft;
     public Action<UserData> OnUserJoined,OnUserLeft;
 
-    public NetworkServer(NetworkManager networkManager)
+    
+    public NetworkServer(NetworkManager networkManager, NetworkObject playerPrefab)
     {
         this.networkManager = networkManager;
-
+        this.playerPrefab = playerPrefab;
         networkManager.ConnectionApprovalCallback += ApprovalCheck;
         networkManager.OnServerStarted += OnNetworkReady;
     }
@@ -42,15 +45,20 @@ public class NetworkServer : IDisposable
         
         OnUserJoined?.Invoke(userData);
 
+        _ = SpawnPlayer(request.ClientNetworkId);
         response.Approved = true;
-        response.Position =
-            SpawnPoint
-                .GetRandomSpawnPoint(); // Spawning the Players at a random spawn point
-                                        // (except the host, as this happens at the same time or a bit after the host spawns)
-        response.Rotation = Quaternion.identity;
-        response.CreatePlayerObject = true;
+        response.CreatePlayerObject = false;
     }
 
+    private async Task SpawnPlayer(ulong clientId)
+    {
+        await Task.Delay(1000);
+       NetworkObject playerInstance =
+           GameObject.Instantiate(playerPrefab, SpawnPoint.GetRandomSpawnPoint(), Quaternion.identity);
+       
+       playerInstance.SpawnAsPlayerObject(clientId);
+        
+    }
     private void OnNetworkReady()
     {
         networkManager.OnClientDisconnectCallback += OnClientDisconnect;
