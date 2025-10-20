@@ -23,7 +23,7 @@ public class ServerSingleton : MonoBehaviour
             instance = FindObjectOfType<ServerSingleton>();
             if (instance == null)
             {
-                Debug.LogError("No Server Singleton found");
+               // Debug.LogError("No Server Singleton found");
                 return null;
             }
 

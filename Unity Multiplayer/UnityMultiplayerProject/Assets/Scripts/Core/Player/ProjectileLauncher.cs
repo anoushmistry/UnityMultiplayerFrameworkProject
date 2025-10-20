@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ProjectileLauncher : NetworkBehaviour
 {
@@ -26,6 +27,8 @@ public class ProjectileLauncher : NetworkBehaviour
 
 
     private bool shouldFire;
+
+    private bool isCursorOverUI;
 
     public override void OnNetworkSpawn()
     {
@@ -51,6 +54,8 @@ public class ProjectileLauncher : NetworkBehaviour
             muzzleFlash.SetActive(false);
         }
         if (!IsOwner) { return; }
+
+        isCursorOverUI = EventSystem.current.IsPointerOverGameObject();
 
         if (timer > 0)
         {
@@ -87,6 +92,10 @@ public class ProjectileLauncher : NetworkBehaviour
 
     private void HandleFire(bool shouldFire)
     {
+        if (shouldFire)
+        {
+            if(isCursorOverUI) {return;}
+        }
         this.shouldFire = shouldFire;
     }
 
@@ -117,7 +126,6 @@ public class ProjectileLauncher : NetworkBehaviour
     [ClientRpc]
     private void SpawnDummyProjectileClientRpc(Vector3 spawnPos, Vector3 spawnDir)
     {
-        
         if (IsOwner)
         {
             return;

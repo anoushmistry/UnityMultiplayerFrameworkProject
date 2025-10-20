@@ -8,6 +8,8 @@ public class SpawnOnDestroy : MonoBehaviour
     [SerializeField] private GameObject objectToSpawn;
     private void OnDestroy()
     {
+        if(!gameObject.scene.isLoaded) {return;}
+        
         Instantiate(objectToSpawn, transform.position, Quaternion.identity);
     }
 }

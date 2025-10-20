@@ -51,6 +51,11 @@ public class Leaderboard : NetworkBehaviour
 
     private void HandleLeaderboardEntitiesChanged(NetworkListEvent<LeaderboardEntityState> changeEvent)
     {
+        if (!gameObject.scene.isLoaded)
+        {
+            return;
+        }
+
         switch (changeEvent.Type)
         {
             case NetworkListEvent<LeaderboardEntityState>.EventType.Add:
@@ -88,6 +93,7 @@ public class Leaderboard : NetworkBehaviour
 
                 break;
         }
+
         entityDisplays.Sort((x, y) => y.Coins.CompareTo(x.Coins));
         for (int i = 0; i < entityDisplays.Count; i++)
         {
@@ -95,8 +101,8 @@ public class Leaderboard : NetworkBehaviour
             entityDisplays[i].UpdateDisplayText();
             bool shouldShow = i <= entitesToDisplay - 1;
             entityDisplays[i].gameObject.SetActive(shouldShow);
-           
         }
+
         LeaderboardEntityDisplay myEntityDisplay =
             entityDisplays.FirstOrDefault(x => x.ClientId == NetworkManager.Singleton.LocalClientId);
 
