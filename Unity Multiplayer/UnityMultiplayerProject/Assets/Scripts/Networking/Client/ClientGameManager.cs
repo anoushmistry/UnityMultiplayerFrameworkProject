@@ -91,10 +91,11 @@ public class ClientGameManager : IDisposable
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
     }
 
-    public async void MatchmakeAsync(Action<MatchmakerPollingResult> OnMatchmake)
+    public async void MatchmakeAsync(Action<MatchmakerPollingResult> OnMatchmake, bool isTeamQueue)
     {
         if(matchplayMatchmaker.IsMatchmaking) {return;}
 
+        userData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
         MatchmakerPollingResult matchmakerPollingResult = await GetMatchAsync();
         OnMatchmake?.Invoke(matchmakerPollingResult);
 
