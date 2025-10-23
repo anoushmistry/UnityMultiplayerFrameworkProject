@@ -148,6 +148,11 @@ public class HostGameManager : IDisposable
 
     private async void HandleClientLeft(string authId)
     {
+        if (string.IsNullOrEmpty(lobbyId))
+        {
+            Debug.LogWarning("Tried to remove player, but lobbyId is empty or lobby deleted.");
+            return;
+        }
         try
         {
             await LobbyService.Instance.RemovePlayerAsync(lobbyId, authId);
@@ -155,7 +160,6 @@ public class HostGameManager : IDisposable
         catch (LobbyServiceException e)
         {
             Debug.Log(e);
-            throw;
         }
     }
 }

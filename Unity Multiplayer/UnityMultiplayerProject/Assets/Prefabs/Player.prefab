@@ -293,6 +293,8 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+  TeamIndex:
+    m_InternalValue: 0
 --- !u!114 &1812760924550800979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10318,6 +10320,7 @@ GameObject:
   - component: {fileID: 5222241267411291608}
   - component: {fileID: 93651739808130723}
   - component: {fileID: 2209579630564707050}
+  - component: {fileID: 8467883895874808119}
   - component: {fileID: 3264040023481157980}
   m_Layer: 0
   m_Name: Tank Treads
@@ -10443,6 +10446,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.75, y: 2.05}
   m_EdgeRadius: 0
+--- !u!114 &8467883895874808119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4740502818835268076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4995cce965a0128498b2c3dd4daa5634, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamColorLookup: {fileID: 11400000, guid: 63e7ffe656ea9b7439734d9cea0c0e7c, type: 2}
+  tankPlayer: {fileID: 606741344833597015}
+  spriteRenderers:
+  - {fileID: 3377733883983900341}
+  - {fileID: 2606479347132489886}
 --- !u!114 &3264040023481157980
 MonoBehaviour:
   m_ObjectHideFlags: 0

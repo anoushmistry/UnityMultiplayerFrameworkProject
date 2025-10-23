@@ -24,6 +24,8 @@ public class ServerGameManager : IDisposable
 
     private MatchplayBackfiller matchplayBackfiller;
     private NetworkObject playerPrefab;
+    
+    private Dictionary<string, int> TeamIdToIndexDict =  new Dictionary<string, int>();
 
 
     public NetworkServer networkServer { get; private set; }
@@ -100,6 +102,13 @@ public class ServerGameManager : IDisposable
     private void UserJoined(UserData user)
     {
         Team team = matchplayBackfiller.GetPlayerTeam(user.userAuthId);
+        if (!TeamIdToIndexDict.TryGetValue(team.TeamId, out int teamIndex))
+        {
+            teamIndex = TeamIdToIndexDict.Count;
+            TeamIdToIndexDict.Add(team.TeamId, teamIndex);
+        }
+        
+        user.teamIndex = teamIndex;
         Debug.Log($"The User ID is: {user.userAuthId} and Team ID is: {team.TeamId}");
         //matchplayBackfiller.AddPlayerToMatch(user);
         multiplayAllocationService.AddPlayer();
