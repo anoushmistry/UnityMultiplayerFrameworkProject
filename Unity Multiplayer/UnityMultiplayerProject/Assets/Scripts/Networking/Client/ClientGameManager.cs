@@ -23,7 +23,8 @@ public class ClientGameManager : IDisposable
     private NetworkClient networkClient;
     private MatchplayMatchmaker matchplayMatchmaker;
     
-    private UserData userData;
+    public UserData UserData {get; private set;}
+    
 
     public async Task<bool> InitializeAsync() // Used for authenticationg and initializing a client
     {
@@ -36,7 +37,7 @@ public class ClientGameManager : IDisposable
 
         if (authState == AuthState.Authenticated)
         {
-            userData = new UserData
+            UserData = new UserData
             {
                 userName = PlayerPrefs.GetString(NameSelector.PlayerNameKey, "MissingName"),
                 userAuthId = AuthenticationService.Instance.PlayerId
@@ -82,7 +83,7 @@ public class ClientGameManager : IDisposable
     }
     private void ConnectClient()
     {
-        string payload = JsonUtility.ToJson(userData);
+        string payload = JsonUtility.ToJson(UserData);
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
 
@@ -95,14 +96,14 @@ public class ClientGameManager : IDisposable
     {
         if(matchplayMatchmaker.IsMatchmaking) {return;}
 
-        userData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
+        UserData.userGamePreferences.gameQueue = isTeamQueue ? GameQueue.Team : GameQueue.Solo;
         MatchmakerPollingResult matchmakerPollingResult = await GetMatchAsync();
         OnMatchmake?.Invoke(matchmakerPollingResult);
 
     }
     private async Task<MatchmakerPollingResult> GetMatchAsync()
     {
-        MatchmakingResult matchmakingResult = await matchplayMatchmaker.Matchmake(userData);
+        MatchmakingResult matchmakingResult = await matchplayMatchmaker.Matchmake(UserData);
 
         if (matchmakingResult.result == MatchmakerPollingResult.Success)
         {

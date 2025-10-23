@@ -329,6 +329,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 3358126794758597465}
   playerCollider: {fileID: 2209579630564707050}
   coinWallet: {fileID: 4675486057778655916}
+  player: {fileID: 606741344833597015}
   projectileSpeed: 40
   fireRate: 0.75
   muzzleFlashDuration: 0.075
