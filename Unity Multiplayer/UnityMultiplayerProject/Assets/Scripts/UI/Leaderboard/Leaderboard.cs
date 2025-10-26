@@ -143,7 +143,7 @@ public class Leaderboard : NetworkBehaviour
             }
         }
 
-        if (teamLeaderboardBackground.activeSelf)
+        if (!teamLeaderboardBackground.activeSelf) // This helps team sorting not run when not in a team queue
         {
             return;
         }
